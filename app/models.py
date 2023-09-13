@@ -23,6 +23,28 @@ class Admin(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
     
 
+class Drivers(db.Model):
+    __tablename__ = 'drivers'
+    driver_id = db.Column(db.Integer, primary_key=True)
+    driver_name = db.Column(db.String(128), index=True, unique=True)
+    driver_age = db.Column(db.Integer)
+    driver_gender = db.Column(db.String(1))
+    driver_address = db.Column(db.String(1024))
+    driver_rating = db.Column(db.Float)
+    bus_driving_experience = db.Column(db.Float)
+    total_driving_experience = db.Column(db.Float)
+    no_of_major_accidents = db.Column(db.Integer)
+    no_of_minor_accidents = db.Column(db.Integer)
+    average_driving_hours_in_day_time = db.Column(db.Float)
+    average_driving_distance_in_day_time = db.Column(db.Float)
+    average_driving_hours_in_night_time = db.Column(db.Float)
+    average_driving_distance_in_night_time = db.Column(db.Float)
+    safety_training_completed = db.Column(db.Boolean)
+    prior_substance_use = db.Column(db.Boolean)
+    vision_status = db.Column(db.String(64))
+    health_status = db.Column(db.String(64))
+
+    
 @login.user_loader
 def load_admin(id):
     return Admin.query.get(int(id))
