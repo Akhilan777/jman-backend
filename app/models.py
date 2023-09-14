@@ -43,6 +43,10 @@ class Drivers(db.Model):
     prior_substance_use = db.Column(db.Boolean)
     vision_status = db.Column(db.String(64))
     health_status = db.Column(db.String(64))
+    drivers = db.relationship('Post', backref='author', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Drivers {}>'.format(self.username)
     
 class Routes(db.Model):
     __tablename__ = 'routes'
@@ -52,7 +56,11 @@ class Routes(db.Model):
     date =db.Column(db.String(64))
     start =db.Column(db.String(64))
     destination =db.Column(db.String(64))
-    driver_id = db.Column(db.Integer)
+    driver_id = db.Column(db.Integer,db.ForeignKey('drivers.driver_id'))
+    
+    def __repr__(self):
+        return '<Routes {}>'.format(self.body)
+    
     
     
 @login.user_loader
