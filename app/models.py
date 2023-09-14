@@ -43,7 +43,17 @@ class Drivers(db.Model):
     prior_substance_use = db.Column(db.Boolean)
     vision_status = db.Column(db.String(64))
     health_status = db.Column(db.String(64))
-
+    
+class Routes(db.Model):
+    __tablename__ = 'routes'
+    route_id = db.Column(db.Integer, primary_key=True)
+    route_name =db.Column(db.String(128), index=True)
+    time =db.Column(db.String(64))
+    date =db.Column(db.String(64))
+    start =db.Column(db.String(64))
+    destination =db.Column(db.String(64))
+    driver_id = db.Column(db.Integer)
+    
     
 @login.user_loader
 def load_admin(id):
