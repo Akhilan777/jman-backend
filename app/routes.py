@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import Admin
+from app.models import Admin, Drivers
 from flask import request, jsonify
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import text
