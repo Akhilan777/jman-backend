@@ -23,7 +23,7 @@ class Admin(UserMixin, db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
+
 
 class Drivers(db.Model):
     __tablename__ = 'drivers'
@@ -46,11 +46,29 @@ class Drivers(db.Model):
     vision_status = db.Column(db.String(64))
     health_status = db.Column(db.String(64))
     drivers = db.relationship('Routes', backref='author', lazy='dynamic')
-
+    
+    def serialize(self):
+        return {"driver_id": self.driver_id,
+                "driver_name": self.driver_name,
+                "driver_age":self.driver_age,
+                "driver_gender":self.driver_gender,
+                "driver_address":self.driver_address,
+                "driver_rating":self.driver_rating,
+                "bus_driving_experience":self.bus_driving_experience,
+                "total_driving_experience":self. total_driving_experience,
+                "no_of_major_accidents":self.no_of_major_accidents,
+                "no_of_minor_accidents":self.no_of_minor_accidents,
+                "average_driving_hours_in_day_time":self.average_driving_hours_in_day_time,
+                "average_driving_distance_in_day_time":self.average_driving_distance_in_day_time,
+                "average_driving_hours_in_night_time":self.average_driving_hours_in_night_time,
+                "average_driving_distance_in_night_time":self.average_driving_distance_in_night_time,
+                "safety_training_completed":self.safety_training_completed,
+                "prior_substance_use":self.prior_substance_use,
+                "vision_status":self.vision_status,
+                "health_status":self.health_status}
 
     def __repr__(self):
         return '<Drivers {}>'.format(self.driver_id)
-    
 
     def get_input(self, id):
         driver = Drivers.query.get(id)
@@ -83,8 +101,8 @@ class Drivers(db.Model):
 
         for col in boolean_cols:
             print("Enter 0 for False. 1 for True")
-            val = input(f"Enter {col}: ").strip()
-            if(val == 'False'):
+            val = int(input(f"Enter {col}: "))
+            if(val == 0):
                 setattr(self, col, False)
             else:
                 setattr(self, col, True)
@@ -108,6 +126,15 @@ class Routes(db.Model):
     
     def __repr__(self):
         return '<Routes {}>'.format(self.route_id)
+    
+    def serialize(self):
+        return {"route_id": self.route_id,
+                "route_name": self.route_name,
+                "date":self.date,
+                "time":self.time,
+                "start":self.start,
+                "destination":self.destination,
+                "driver_id":self.driver_id}
     
     
     def get_input(self, id):

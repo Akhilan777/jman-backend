@@ -1,6 +1,6 @@
 from app import app, db
-from app.models import Admin, Drivers
-from flask import request, jsonify
+from app.models import Admin, Drivers,Routes
+from flask import request, jsonify,render_template
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import text
 
@@ -34,6 +34,15 @@ def login():
     login_user(user, remember=remember_me)
     return jsonify({'message' : 'Login successful'}), 200
 
+@app.route('/driver/<int:driver_id>/')
+def driver(driver_id):
+    d = Drivers.query.get_or_404(driver_id)
+    return jsonify(d.serialize())
+
+@app.route('/route/<int:route_id>/')
+def route(route_id):
+    r=Routes.query.get_or_404(route_id)
+    return jsonify(r.serialize())
 
 @app.route('/logout')
 def logout():
