@@ -66,3 +66,36 @@ def route(route_id):
     r=Routes.query.get_or_404(route_id)
     return jsonify(r.serialize())
 
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    try:
+        input_data = request.json
+        predictions = predict_accident_probabilities(input_data, mlmodel)
+        return jsonify(predictions)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
+def predict_accident_probabilities(input_data, model):
+    predicted_class = model.predict(input_data)
+    class_probabilities = model.predict_proba(input_data)
+    probability_fatal = class_probabilities[0][0]  # Probability for fatal accident
+    probability_serious = class_probabilities[0][1]  # Probability for serious accident
+    probability_slight = class_probabilities[0][2]  # Probability for slight accident
+
+    w_fatal = 0.5  # Weight for fatal accidents
+    w_serious = 0.4  # Weight for serious accidents
+    w_slight = 0.3  # Weight for slight accidents
+
+    combined_probability = (w_fatal * probability_fatal +
+                            w_serious * probability_serious +
+                            w_slight * probability_slight)
+
+    return {
+        "Predicted_Class": int(predicted_class[0]),
+        "Probability_Fatal": probability_fatal,
+        "Probability_Serious": probability_serious,
+        "Probability_Slight": probability_slight,
+        "Combined_Probability": combined_probability
+    }
