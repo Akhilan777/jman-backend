@@ -57,14 +57,20 @@ def logout():
 
 @app.route('/driver/<int:driver_id>/')
 def driver(driver_id):
-    d = Drivers.query.get_or_404(driver_id)
-    return jsonify(d.serialize())
+    try:
+        d = Drivers.query.get_or_404(driver_id)
+        return jsonify(d.serialize())
+    except Exception as e:
+        return jsonify({"error":str(e)})
 
 
 @app.route('/route/<int:route_id>/')
 def route(route_id):
-    r=Routes.query.get_or_404(route_id)
-    return jsonify(r.serialize())
+    try:
+        r=Routes.query.get_or_404(route_id)
+        return jsonify(r.serialize())
+    except Exception as e:
+        return jsonify({"error":str(e)})
 
 
 @app.route('/predict', methods=['POST'])
