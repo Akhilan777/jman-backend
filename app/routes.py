@@ -1,12 +1,17 @@
 from app import app, db
-from app.models import Admin, Drivers,Routes
-from flask import request, jsonify,render_template
+from app.models import Admin, Drivers, Routes
+from flask import request, jsonify, render_template
 from flask_login import current_user, login_user, logout_user
 from sqlalchemy import text
+from joblib import load
+
+mlmodel = load(app.config['ML_MODEL_URI'])
+
 
 @app.route('/')
 def test():
     return {'message' : "hello, world"}
+
 
 @app.route('/test_database_connection')
 def test_database_connection():
@@ -16,6 +21,15 @@ def test_database_connection():
         return jsonify({'message' : 'Database connection successful', 'version' : version}), 200
     except Exception as e:
         return jsonify({'message' : 'Database connection failed', 'error' : str(e)}), 500
+    
+
+@app.route('/test_model_status')
+def test_model_status():
+    try:
+        if mlmodel:
+            return jsonify({'status' : 'Model is loaded and ready for predictions'}), 200
+    except Exception as e:
+        return jsonify({'status' :  f"Error loading the model: {str(e)}"}), 500
     
 
 @app.route('/login', methods=['POST'])
@@ -34,17 +48,21 @@ def login():
     login_user(user, remember=remember_me)
     return jsonify({'message' : 'Login successful'}), 200
 
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return jsonify({'message' : 'Logout Successful'}), 200
+
+
 @app.route('/driver/<int:driver_id>/')
 def driver(driver_id):
     d = Drivers.query.get_or_404(driver_id)
     return jsonify(d.serialize())
+
 
 @app.route('/route/<int:route_id>/')
 def route(route_id):
     r=Routes.query.get_or_404(route_id)
     return jsonify(r.serialize())
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return jsonify({'message' : 'Logout Successful'}), 200
