@@ -158,7 +158,26 @@ class Routes(db.Model):
         driver_id_input = int(input("Enter driver id: "))
         setattr(self, 'driver_id', driver_id_input)
 
-        
+class Input(db.Model):
+    __tablename__ = 'Input'
+    id = db.Column(db.Integer, primary_key=True)
+    Latitude = db.Column(db.Float)
+    Longitude = db.Column(db.Float)
+    Age_Band_of_Driver =db.Column(db.Integer)
+    Date =db.Column(db.Date())
+    Time =db.Column(db.Boolean)
+    Speed_Limit = db.Column(db.Integer)
+    Light_Conditions=db.Column(db.String(64))
+    Road_Surface_Conditions=db.Column(db.String(64))
+    Junction_Control=db.Column(db.String(64))
+    Sex_of_Driver=db.Column(db.String(1))
+    Road_Type=db.Column(db.String(64))
+    Weather_Conditions=db.Column(db.String(64))
+    Urban_or_Rural_Area=db.Column(db.String(64))
+    Probability_Fatal=db.Column(db.Float)
+    Probability_Serious=db.Column(db.Float)
+    Probability_Slight=db.Column(db.Float)
+    Combined_Probability=db.Column(db.Float)
     
 @login.user_loader
 def load_admin(id):
